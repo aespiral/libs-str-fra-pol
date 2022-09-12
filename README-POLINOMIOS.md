@@ -1,5 +1,36 @@
 # Biblioteca de funções em C para representação e manipulação de polinômios
 
+## Refatorar a alocação de dados da biblioteca
+
+No projeto original, a biblioteca passava os polinômios resultantes
+através de uma variável global.
+
+Alterar isso com passagem de parâmetros por referência (versão mutável).
+
+## Funções a serem implementadas
+
+- somar dois polinômios
+
+Na soma de dois polinômios, os termos de maior grau podem se cancelar, 
+resultando num polinômio cujo grau real é menor do que o representado
+pelo campo específico no registro. Para isso, deve haver uma operação
+de normalização, que busca ajustar o campo correspondente ao grau de
+acordo com os valores que constam efetivamente no polinômio.
+
+- derivar um polinômio
+- multiplicar um polinômio por uma constante:
+```
+4 x^3 + 2 x + 10   ,  5   - - - >   20 x^3 + 10 x + 50
+```
+- multiplicar um polinômio por um monômio de algum grau
+```
+7 x^2 + 3 , 2 (=x^2) - - - >  7 x^4 + 3 x^2
+```
+- multiplicar dois polinômios
+- etc.
+ 
+## Documentação
+
 Um polinômio tem sua representação gráfica em textos de Matemática, 
 e também nos cadernos e nos quadros-negros. 
 Mas, o que seria a representação de um polinômio em um programa?
