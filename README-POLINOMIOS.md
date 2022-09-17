@@ -1,11 +1,5 @@
 # Biblioteca de funções em C para representação e manipulação de polinômios
 
-## Refatorar a alocação de dados da biblioteca
-
-No projeto original, a biblioteca passava os polinômios resultantes
-através de uma variável global.
-
-Alterar isso com passagem de parâmetros por referência (versão mutável).
 
 ## Funções a serem implementadas
 
@@ -18,6 +12,9 @@ de normalização, que busca ajustar o campo correspondente ao grau de
 acordo com os valores que constam efetivamente no polinômio.
 
 - derivar um polinômio
+```
+2 x^5 + x^4 + 7 x^2 + 100   - - - >  10 x^4 + 4 x^3 + 14 x
+```
 - multiplicar um polinômio por uma constante:
 ```
 4 x^3 + 2 x + 10   ,  5   - - - >   20 x^3 + 10 x + 50
@@ -27,6 +24,8 @@ acordo com os valores que constam efetivamente no polinômio.
 7 x^2 + 3 , 2 (=x^2) - - - >  7 x^4 + 3 x^2
 ```
 - multiplicar dois polinômios
+  - exercício extenso
+  - utliza as multiplicações por constante e por polinômio
 - etc.
  
 ## Documentação
@@ -46,12 +45,7 @@ perguntar: que informações definem um polinômio? Seu nome e os valores
 dos coeficientes dos diversos termos. Obviamente, o polinômio é finito,
 e existe o termo de maior grau.
 
-Para representar os coeficientes, a escolha é direta: um array de floats.
-Dadas as limitações do C, temos que escolher um tamanho excessivo e usar
-apenas uma parcela disso para armazenar os coeficientes. Porém, para 
-que seja prático, é conveniente ter a informação do tamanho do polinômio,
-isto é, a quantidade de termos necessários. Esse número sempre será
-menor que o máximo exagerado que é usado para alocar os arrays.
+Para representar os coeficientes, a escolha é direta: um array de floats. Armazenar o grau do polinômio agiliza as operações (algoritmos). 
 
 A ordem de disposição dos coeficientes dentro do array importa.
 Existe uma ordem mais fácil: consiste em começar o array com o
