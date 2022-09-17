@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <math.h>
 
 #define MAX 32
 #define TOL 1.e-6
@@ -43,39 +44,54 @@ float raiz(POLI* p) {
     // funciona para n == 1 e n == 2 (báskara)
 }
 
-/*
- * Melhorias possiveis no Pretty Print:
- * - Em vez de mostrar 2.000, 3.000, etc., mostrar 2 , 3 , etc.
- * - Em vez de mostrar 1.000 . x^algo (ou 1 . x^algo), mostrar x^algo
- */
+// Imprime floats inteiros como inteiros e esconde o grau (ou o x) para x^1 (ou x^0)
+void imprime_termo(float coef, int grau) {
+    if (fabs(coef - round(coef)) < TOL) {                        // Caso float inteiro
+        if ((int)round(coef) == 1) {                               // Caso float = 1
+            if (grau == 0) {printf("1");}                            // Caso 1x^0
+            else if (grau == 1) {printf("x");}                       // Caso 1x^1
+            else {printf("x^%d", grau);}                             // Caso 1x^n
+        } else {                                                   // Caso float != 1
+            if (grau == 0) {printf("%d", (int)round(coef));}         // Caso cx^0
+            else if (grau == 1) {printf("%dx", (int)round(coef));}   // Caso cx^1
+            else {printf("%dx^%d", (int)round(coef), grau);}         // Caso cx^n
+        }
+    } else {                                                     // Caso float não inteiro 
+        if (grau == 0) {printf("%.3f", coef);}                     // Caso .3cx^0
+        else if (grau == 1) {printf("%.3fx", coef);}               // Caso .3cx^1
+        else {printf("%.3fx^%d", coef, grau);}                     // Caso .3cx^n
+    }
+}
+
+// Alteração: Faz uso de imprime_termo para as melhorias mencionadas
 void pprint(POLI* p) {
     printf("%c(x) = ", p->nome);
-    // Os casos n == 0 e n == 1 sao tratados a parte
-    //   apenas para evitar escrever x^1 e x^0
     if (p->grau == 0){
-        printf("%.3f\n", p->coefs[0]);
-        return; // dica: o return termina a funcao 
-        // eh como se tudo daqui para baixo fosse um 'else'
+        imprime_termo(p->coefs[0], 0);
+        printf("\n");
+        return;
     } 
     if (p->grau == 1){
-        printf("%.3f . x", p->coefs[1]);
-        if (p->coefs[0] > TOL)
-            printf(" + %.3f", p->coefs[0]);
-        putchar('\n');
+        imprime_termo(p->coefs[1], 1);
+        if (fabs(p->coefs[0]) > TOL) {
+            if (p->coefs[0] < -TOL) {printf(" - ");}
+            else {printf(" + ");}
+            imprime_termo(fabs(p->coefs[0]), 0);
+        }
+        printf("\n");
         return;
     }
 
-    printf("%.3f . x^%d", p->coefs[p->grau], p->grau);
+    imprime_termo(p->coefs[p->grau], p->grau);
     int i;
-    for(i=p->grau-1; i >= 2; i = i - 1) {
-        if (p->coefs[i] > TOL)
-            printf(" + %.3f . x^%d", p->coefs[i],i);
+    for(i=p->grau-1; i >= 0; i = i - 1) {
+        if (fabs(p->coefs[i]) > TOL) {
+            if (p->coefs[i] < -TOL) {printf(" - ");}
+            else {printf(" + ");}
+            imprime_termo(fabs(p->coefs[i]), i);
+        }
     }
-    if (p->coefs[1] > TOL)
-        printf(" + %.3f . x", p->coefs[1]);
-    if (p->coefs[0] > TOL)
-        printf(" + %.3f", p->coefs[0]);
-    putchar('\n');
+    printf("\n");
 }
 
 bool normalizado(POLI* p) {
