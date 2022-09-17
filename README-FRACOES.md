@@ -16,20 +16,19 @@ Uma fração é normalizada é aquela cujos numerador e denominador são primos 
 - `normalizar`
 - `somar`
 
-As funções que resultam em frações usam um mecanismo improvisado de retorno do valor
-final. Elas são implementadas como procedimentos (isto é, nada retornam), mas alteram
-uma variável global.
+As funções que resultam em frações foram implementadas na versão imutável.
 
 ## Exercícios
 
 - `inverter multiplicativamente`: a fração multiplicativamente inversa de a/b é b/a
+  - Se o parâmetro recebido for zero, a operação não deve ser realizada: encerrar o programa
 - `multiplicar` 
 - `comparar`
 
 A comparação pode retornar um valor codificado como inteiros. Sugestão:
 ```
-#define EQ 1
-#define GT 2
-#define LT 3
+#define EQ 0
+#define GT 1
+#define LT -1
 ```
 `EQ` significa igual (_equal_); `GT`, maior do que (_greater than_); `LT`, menor do que (_less than_).

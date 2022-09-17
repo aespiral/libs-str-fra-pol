@@ -3,10 +3,17 @@
 #include <stdbool.h>
 #include <string.h>
 
-struct fr {
+typedef struct {
     int nu; // NUmerador
     int de; // DEnominador
-};
+} FR;
+
+FR* make(int numerador, int denominador) {
+    FR* res = (FR*) malloc(sizeof(FR));
+    res->nu = numerador;
+    res->de = denominador;
+    return res;
+}
 
 /* 
  * Funcoes auxiliares
@@ -49,9 +56,9 @@ int largura_dec(int n) {
 }
 
 // Pretty Print
-void pprint(struct fr f) { 
-    int larg_num = largura_dec(f.nu);
-    int larg_den = largura_dec(f.de);
+void pprint(FR* f) { 
+    int larg_num = largura_dec(f->nu);
+    int larg_den = largura_dec(f->de);
 
     int larg = larg_num > larg_den ? larg_num : larg_den;
     int marg_num = (larg - larg_num) / 2 + 1;
@@ -60,68 +67,67 @@ void pprint(struct fr f) {
     int i;
     for (i = 0; i< marg_num; i = i + 1)
         putchar(' ');
-    printf("%d\n", f.nu);
+    printf("%d\n", f->nu);
     for (i = 0; i<larg+2; i = i + 1)
         putchar('-');
     putchar('\n');
     for (i = 0; i< marg_den; i = i + 1)
         putchar(' ');
-    printf("%d\n", f.de);
+    printf("%d\n", f->de);
 
 }
 
-bool normalizada(struct fr f) {
-    return mdc(f.nu, f.de) == 1;
+bool normalizada(FR* f) {
+    return mdc(f->nu, f->de) == 1;
 }
 
 /*
  * Funcoes sobre fracoes
  */
-struct fr res; // variavel global para improvisar retorno de fracoes
-
-// seria:
-// struct fr normalizar(struct fr f)
-void normalizar(struct fr f) {
-    int d = mdc(f.nu,f.de);
-    res.nu = f.nu/d; res.de = f.de/d;
+FR* normalizar(FR* f) {
+    int d = mdc(f->nu,f->de);
+    FR* res = (FR*) malloc(sizeof(FR));
+    res->nu = f->nu/d; res->de = f->de/d;
+    return res;
 }
 
-// seria:
-// struct fr somar(struct fr f, struct fr g)
-void somar(struct fr f, struct fr g) {
-    int d = mmc(f.de, g.de);
+FR* somar(FR* f, FR* g) {
+    int d = mmc(f->de, g->de);
 
-    struct fr aux;
-    aux.nu = (f.nu * d) / f.de + (g.nu * d) / g.de;
+    FR aux;
+    aux.nu = (f->nu * d) / f->de + (g->nu * d) / g->de;
     aux.de = d;
 
-    normalizar(aux);
+    return normalizar(&aux);
 }
 
 int main() {
     printf("O M.D.C. de 144 e 96 eh %d\n", mdc(144,96));
     printf("O M.D.C. de 3 e 2 eh %d\n", mdc(2,3));
+    puts("");
 
-    struct fr f1; f1.nu = 6; f1.de = 9; 
+    FR * f1 = make(6,9);
     pprint(f1); 
+    puts("");
     if (normalizada(f1))
         puts("A fracao eh normalizada\n");
     else
         puts("A fracao não eh normalizada\n");
     
-    struct fr f2; f2.nu = 1024; f2.de = 15;
+    puts("Após normalizar:\n");
+    pprint(normalizar(f1));
+    puts("");
+
+    FR * f2 = make(1024, 15);
     pprint(f2);
+    puts("");
     if (normalizada(f2))
         puts("A fracao eh normalizada\n");
     else
         puts("A fracao não eh normalizada\n");
     
-    normalizar(f1);
-    pprint(res);
+    puts("Soma de 1/6 e 2/9:\n");
+    pprint(somar(make(1,6), make(2,9)));
+``    puts("");
 
-    struct fr f3; f3.nu = 1; f3.de = 6;
-    struct fr f4; f4.nu = 2; f4.de = 9;
-    somar(f3, f4);
-    struct fr f5; f5.nu = res.nu; f5.de = res.de;
-    pprint(f5);
 }
